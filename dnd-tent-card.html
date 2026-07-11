@@ -11,7 +11,7 @@
   :root{
     --parchment:#F3E7C9;
     --parchment-shadow:#D9C08F;
-    --ink:#2A1B12;
+    --ink:#000000;
     --burgundy:#6E2430;
     --brass:#A9812E;
     --brass-light:#C9A659;
@@ -99,6 +99,52 @@
     margin:0 0 18px;
   }
 
+  .char-tabs{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:18px;
+  }
+  .char-tab{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    max-width:170px;
+    font-family:var(--font-body);
+    font-size:.82rem;
+    color:#a99a7c;
+    background:#1c140d;
+    border:1px solid #4a3624;
+    padding:6px 10px;
+    border-radius:999px;
+    cursor:pointer;
+  }
+  .char-tab span{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .char-tab.is-active{
+    background:linear-gradient(180deg,var(--brass-light),var(--brass));
+    color:var(--felt);
+    font-weight:600;
+    border-color:var(--brass);
+  }
+  .char-tab-remove{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:15px;
+    height:15px;
+    border-radius:50%;
+    font-size:.7rem;
+    line-height:1;
+    opacity:.6;
+    flex:0 0 auto;
+  }
+  .char-tab-remove:hover{ opacity:1; }
+  .char-tab-add{ font-style:italic; }
+
   fieldset{
     border:none;
     padding:0;
@@ -119,12 +165,31 @@
     margin-bottom:12px;
   }
   .field label{
-    display:block;
+    display:flex;
+    align-items:center;
+    gap:6px;
     font-size:.78rem;
     letter-spacing:.06em;
     text-transform:uppercase;
     color:#a99a7c;
     margin-bottom:5px;
+  }
+  .help-icon{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:14px;
+    height:14px;
+    border-radius:50%;
+    border:1px solid var(--brass);
+    color:var(--brass-light);
+    font-family:var(--font-body);
+    font-size:.68rem;
+    font-style:italic;
+    text-transform:none;
+    letter-spacing:0;
+    line-height:1;
+    cursor:help;
   }
   .field input,
   .field select{
@@ -145,7 +210,7 @@
   }
   .field-row{
     display:grid;
-    grid-template-columns:1fr 1fr 1fr;
+    grid-template-columns:1fr 1fr;
     gap:10px;
   }
 
@@ -155,6 +220,31 @@
     flex-direction:column;
     align-items:center;
     gap:18px;
+  }
+
+  .size-toggle{
+    display:inline-flex;
+    background:#1c140d;
+    border:1px solid #4a3624;
+    border-radius:999px;
+    padding:4px;
+    gap:4px;
+  }
+  .size-btn{
+    font-family:var(--font-body);
+    font-size:.85rem;
+    letter-spacing:.02em;
+    color:#a99a7c;
+    background:transparent;
+    border:none;
+    padding:8px 18px;
+    border-radius:999px;
+    cursor:pointer;
+  }
+  .size-btn.is-active{
+    background:linear-gradient(180deg,var(--brass-light),var(--brass));
+    color:var(--felt);
+    font-weight:600;
   }
 
   .table-surface{
@@ -178,18 +268,25 @@
     border-radius:3px;
     overflow:hidden;
   }
+  .tentcard.size-index{
+    width:min(300px,72vw);
+    aspect-ratio:5/6;
+  }
 
   .panel{
     flex:1 1 50%;
     min-height:0;
     position:relative;
-    padding:6% 7%;
+    padding:5% 8%;
     display:flex;
     align-items:center;
+    justify-content:center;
     background:
       radial-gradient(ellipse at 50% 0%, rgba(255,255,255,.25), rgba(255,255,255,0) 55%),
       var(--parchment);
     color:var(--ink);
+    container-type:inline-size;
+    container-name:panel;
   }
   .panel-top{ transform:rotate(180deg); }
 
@@ -227,99 +324,63 @@
     position:relative;
     z-index:1;
     display:flex;
+    flex-direction:column;
     align-items:center;
-    gap:5%;
+    text-align:center;
     width:100%;
   }
 
-  .seal{
-    flex:0 0 auto;
-    width:19%;
-    aspect-ratio:1;
-    border-radius:50%;
-    background:radial-gradient(circle at 35% 30%, #8a2e33, var(--burgundy) 70%, #551c22 100%);
-    border:2px solid var(--brass);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    box-shadow:0 2px 4px rgba(0,0,0,.25), inset 0 0 0 3px rgba(0,0,0,.15);
-  }
-  .seal svg{
-    width:56%;
-    height:56%;
-    stroke:var(--brass-light);
-    fill:none;
-    stroke-width:1.4;
-    stroke-linecap:round;
-    stroke-linejoin:round;
-  }
-
-  .text-block{
-    flex:1 1 auto;
-    min-width:0;
-  }
   .char-name{
     font-family:var(--font-display);
     font-weight:700;
-    font-size:clamp(1.1rem,5.6cqw,1.9rem);
-    line-height:1.05;
-    margin:0 0 3px;
+    line-height:1.02;
+    margin:0;
     color:var(--ink);
     word-break:break-word;
   }
+  .panel-simple .char-name{ font-size:clamp(2.1rem,19cqw,5.4rem); }
+  .panel-stats .char-name{ font-size:clamp(1.6rem,13cqw,3.5rem); }
+
   .char-sub{
     font-family:var(--font-body);
-    font-style:italic;
-    font-size:.92rem;
-    color:var(--burgundy);
-    margin:0 0 8px;
+    font-weight:600;
+    color:var(--ink);
     letter-spacing:.01em;
+    margin:0;
   }
+  .panel-simple .char-sub{ font-size:clamp(1.05rem,7.2cqw,2.1rem); margin-top:1.5cqw; }
+  .panel-stats .char-sub{ font-size:clamp(.85rem,5cqw,1.5rem); margin-top:1cqw; }
+
   .rule{
     border:none;
     border-top:1px solid var(--brass);
-    margin:0 0 8px;
+    margin:3cqw 0;
     opacity:.7;
+    width:80%;
   }
-  .stat-row{
-    display:flex;
-    gap:14px;
-    margin-bottom:8px;
-    flex-wrap:wrap;
+
+  .stat-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:2cqw;
+    width:100%;
   }
-  .stat{
-    text-align:left;
-  }
-  .stat .stat-label{
+  .stat-cell{ text-align:center; }
+  .stat-cell .stat-label{
+    display:block;
     font-variant:small-caps;
-    letter-spacing:.1em;
-    font-size:.68rem;
-    color:var(--burgundy);
-    display:block;
+    letter-spacing:.08em;
+    font-size:clamp(.6rem,3cqw,.95rem);
+    color:var(--ink);
+    margin-bottom:.5cqw;
   }
-  .stat .stat-value{
+  .stat-cell .stat-value{
+    display:block;
     font-family:var(--font-display);
-    font-weight:600;
-    font-size:1.05rem;
+    font-weight:700;
+    font-size:clamp(1.3rem,8cqw,2.6rem);
     color:var(--ink);
-    display:block;
-    line-height:1.2;
-  }
-  .meta-line{
-    font-size:.78rem;
-    color:#4a3624;
-    margin:0 0 6px;
-  }
-  .meta-line b{
-    color:var(--ink);
-    font-weight:600;
-  }
-  .quirk{
-    font-style:italic;
-    font-size:.76rem;
-    color:var(--burgundy);
-    margin:0;
-    line-height:1.3;
+    line-height:1;
   }
 
   .fold-line{
@@ -369,22 +430,29 @@
     margin:0;
   }
 
-  /* ---------- Print ---------- */
-  @page{
-    size:letter portrait;
-    margin:0.4in;
+  /* ---------- Print stage (built fresh per print, holds every character) ---------- */
+  #printStage{ display:none; }
+
+  .print-page{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    break-after:page;
+    page-break-after:always;
   }
+  .print-page:last-child{
+    break-after:auto;
+    page-break-after:auto;
+  }
+  .print-page-pair{ gap:0.25in; }
+
+  /* ---------- Print ---------- */
   @media print{
     body{background:#fff;color:#000;}
     .app{max-width:none;margin:0;padding:0;}
-    .masthead,.desk,.print-btn,.print-hint{display:none !important;}
-    .workspace{display:block;}
-    .stage{display:block;}
-    .table-surface{
-      padding:0;
-      background:none;
-      display:block;
-    }
+    .masthead,.desk,.print-btn,.print-hint,.stage{display:none !important;}
+    #printStage{ display:block; }
+    .print-page{ width:100%; height:100vh; }
     .tentcard{
       width:7.7in;
       height:10.2in;
@@ -395,12 +463,18 @@
       -webkit-print-color-adjust:exact;
       print-color-adjust:exact;
     }
+    .tentcard.size-index{
+      width:5in;
+      height:6in;
+      border:1pt solid var(--ink);
+    }
     .panel{
       -webkit-print-color-adjust:exact;
       print-color-adjust:exact;
     }
   }
 </style>
+<style id="pageSizeStyle">@page{ size:letter portrait; margin:0.4in; }</style>
 </head>
 <body>
 <div class="app">
@@ -408,7 +482,7 @@
   <header class="masthead">
     <p class="eyebrow">Tent Card Forge</p>
     <h1>Character Tent Card</h1>
-    <p>Fill in your character, then print. The sheet folds once down the middle into a standing card readable from either side of the table.</p>
+    <p>Fill in your character, then print. The sheet folds once down the middle into a standing card, sized to be read from across the table.</p>
   </header>
 
   <main class="workspace">
@@ -417,21 +491,38 @@
       <h2>Scribe's Desk</h2>
       <p class="desk-sub">Every field updates the card to the right as you type.</p>
 
+      <div class="char-tabs" id="charTabs"></div>
+
       <form id="cardForm" autocomplete="off">
         <fieldset>
-          <legend>Identity</legend>
+          <legend>Identity — on both faces</legend>
           <div class="field">
             <label for="f-name">Character name</label>
             <input id="f-name" data-field="name" type="text" value="Aria Nightshade" maxlength="40">
           </div>
           <div class="field">
-            <label for="f-player">Player name</label>
-            <input id="f-player" data-field="player" type="text" value="Greg" maxlength="30">
+            <label for="f-race">Race</label>
+            <input id="f-race" data-field="race" type="text" value="Half-Elf" maxlength="24">
           </div>
           <div class="field-row">
             <div class="field">
-              <label for="f-race">Race</label>
-              <input id="f-race" data-field="race" type="text" value="Half-Elf" maxlength="24">
+              <label for="f-class">Class <span class="help-icon" tabindex="0" aria-label="Select one from the list, or type your own." title="Select one from the list, or type your own.">?</span></label>
+              <input id="f-class" data-field="class" type="text" list="classOptions" value="Wizard" maxlength="24">
+              <datalist id="classOptions">
+                <option>Artificer</option>
+                <option>Barbarian</option>
+                <option>Bard</option>
+                <option>Cleric</option>
+                <option>Druid</option>
+                <option>Fighter</option>
+                <option>Monk</option>
+                <option>Paladin</option>
+                <option>Ranger</option>
+                <option>Rogue</option>
+                <option>Sorcerer</option>
+                <option>Warlock</option>
+                <option>Wizard</option>
+              </datalist>
             </div>
             <div class="field">
               <label for="f-level">Level</label>
@@ -439,159 +530,145 @@
             </div>
           </div>
           <div class="field">
-            <label for="f-class">Class</label>
-            <select id="f-class" data-field="class">
-              <option>Barbarian</option>
-              <option>Bard</option>
-              <option>Cleric</option>
-              <option>Druid</option>
-              <option>Fighter</option>
-              <option>Monk</option>
-              <option>Paladin</option>
-              <option>Ranger</option>
-              <option>Rogue</option>
-              <option>Sorcerer</option>
-              <option>Warlock</option>
-              <option selected>Wizard</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="f-background">Background</label>
-            <input id="f-background" data-field="background" type="text" value="Sage" maxlength="24">
-          </div>
-          <div class="field">
-            <label for="f-alignment">Alignment</label>
-            <select id="f-alignment" data-field="alignment">
-              <option>Lawful Good</option>
-              <option>Neutral Good</option>
-              <option selected>Chaotic Good</option>
-              <option>Lawful Neutral</option>
-              <option>True Neutral</option>
-              <option>Chaotic Neutral</option>
-              <option>Lawful Evil</option>
-              <option>Neutral Evil</option>
-              <option>Chaotic Evil</option>
-            </select>
+            <label for="f-subclass">Subclass <span class="help-icon" tabindex="0" aria-label="Select one from the list, or type your own." title="Select one from the list, or type your own.">?</span></label>
+            <input id="f-subclass" data-field="subclass" type="text" list="subclassOptions" value="Evocation" maxlength="30">
+            <datalist id="subclassOptions"></datalist>
           </div>
         </fieldset>
 
         <fieldset>
-          <legend>Combat Stats</legend>
+          <legend>Stats — detailed face only</legend>
           <div class="field-row">
+            <div class="field">
+              <label for="f-hp">Max HP</label>
+              <input id="f-hp" data-field="hp" type="text" value="32" maxlength="8">
+            </div>
             <div class="field">
               <label for="f-ac">AC</label>
               <input id="f-ac" data-field="ac" type="text" value="15" maxlength="6">
             </div>
-            <div class="field">
-              <label for="f-hp">HP</label>
-              <input id="f-hp" data-field="hp" type="text" value="32" maxlength="8">
-            </div>
-            <div class="field">
-              <label for="f-speed">Speed</label>
-              <input id="f-speed" data-field="speed" type="text" value="30 ft" maxlength="10">
-            </div>
           </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>Flavor</legend>
-          <div class="field">
-            <label for="f-quirk">Motto / quirk (optional)</label>
-            <input id="f-quirk" data-field="quirk" type="text" value="Knowledge is the only treasure that multiplies when shared." maxlength="90">
+          <div class="field-row">
+            <div class="field">
+              <label for="f-pp">PP</label>
+              <input id="f-pp" data-field="pp" type="text" value="13" maxlength="6">
+            </div>
+            <div class="field">
+              <label for="f-dc">DC</label>
+              <input id="f-dc" data-field="dc" type="text" value="14" maxlength="6">
+            </div>
           </div>
         </fieldset>
       </form>
     </section>
 
     <section class="stage" aria-label="Tent card preview">
+      <div class="size-toggle" role="radiogroup" aria-label="Card size">
+        <button type="button" class="size-btn is-active" data-size="full" aria-pressed="true">Full Page</button>
+        <button type="button" class="size-btn" data-size="index" aria-pressed="false">Index Card (3×5)</button>
+      </div>
       <div class="table-surface">
         <div class="tentcard" id="tentcard">
-          <div class="panel panel-top">
+          <div class="panel panel-top panel-stats">
             <div class="panel-frame">
               <span class="corner tl"></span><span class="corner tr"></span>
               <span class="corner bl"></span><span class="corner br"></span>
             </div>
             <div class="panel-content">
-              <div class="seal" data-seal></div>
-              <div class="text-block">
-                <p class="char-name" data-out="name"></p>
-                <p class="char-sub"><span data-out="subline"></span></p>
-                <hr class="rule">
-                <div class="stat-row">
-                  <div class="stat"><span class="stat-label">AC</span><span class="stat-value" data-out="ac"></span></div>
-                  <div class="stat"><span class="stat-label">HP</span><span class="stat-value" data-out="hp"></span></div>
-                  <div class="stat"><span class="stat-label">Speed</span><span class="stat-value" data-out="speed"></span></div>
-                </div>
-                <p class="meta-line"><b data-out="alignment"></b> &nbsp;·&nbsp; played by <b data-out="player"></b></p>
-                <p class="quirk" data-out="quirk"></p>
+              <p class="char-name" data-out="name"></p>
+              <p class="char-sub"><span data-out="subline"></span></p>
+              <hr class="rule">
+              <div class="stat-grid">
+                <div class="stat-cell"><span class="stat-label">HP</span><span class="stat-value" data-out="hp"></span></div>
+                <div class="stat-cell"><span class="stat-label">AC</span><span class="stat-value" data-out="ac"></span></div>
+                <div class="stat-cell"><span class="stat-label">PP</span><span class="stat-value" data-out="pp"></span></div>
+                <div class="stat-cell"><span class="stat-label">DC</span><span class="stat-value" data-out="dc"></span></div>
               </div>
             </div>
           </div>
 
           <div class="fold-line"><span class="fold-label">fold</span></div>
 
-          <div class="panel panel-bottom">
+          <div class="panel panel-bottom panel-simple">
             <div class="panel-frame">
               <span class="corner tl"></span><span class="corner tr"></span>
               <span class="corner bl"></span><span class="corner br"></span>
             </div>
             <div class="panel-content">
-              <div class="seal" data-seal></div>
-              <div class="text-block">
-                <p class="char-name" data-out="name"></p>
-                <p class="char-sub"><span data-out="subline"></span></p>
-                <hr class="rule">
-                <div class="stat-row">
-                  <div class="stat"><span class="stat-label">AC</span><span class="stat-value" data-out="ac"></span></div>
-                  <div class="stat"><span class="stat-label">HP</span><span class="stat-value" data-out="hp"></span></div>
-                  <div class="stat"><span class="stat-label">Speed</span><span class="stat-value" data-out="speed"></span></div>
-                </div>
-                <p class="meta-line"><b data-out="alignment"></b> &nbsp;·&nbsp; played by <b data-out="player"></b></p>
-                <p class="quirk" data-out="quirk"></p>
-              </div>
+              <p class="char-name" data-out="name"></p>
+              <p class="char-sub"><span data-out="subline"></span></p>
             </div>
           </div>
         </div>
       </div>
 
       <button type="button" class="print-btn" id="printBtn">Print Tent Card</button>
-      <p class="print-hint">In the print dialog, enable "Background graphics" for full color, and print single-sided. Fold once along the dashed line.</p>
+      <p class="print-hint" id="printHint"></p>
     </section>
 
   </main>
 </div>
 
+<div id="printStage"></div>
+
 <script>
 (function(){
-  var ICONS = {
-    Barbarian: '<line x1="6" y1="19" x2="15" y2="10"/><path d="M14 6c2-2 5-2 5 1s-2 4-5 4l-3-1z"/>',
-    Bard: '<circle cx="9" cy="16" r="3.2"/><line x1="12" y1="16" x2="12" y2="5"/><path d="M12 5c2-1 4-1 5 1"/>',
-    Cleric: '<circle cx="12" cy="12" r="3"/><line x1="12" y1="3" x2="12" y2="6.5"/><line x1="12" y1="17.5" x2="12" y2="21"/><line x1="3" y1="12" x2="6.5" y2="12"/><line x1="17.5" y1="12" x2="21" y2="12"/><line x1="5.6" y1="5.6" x2="8" y2="8"/><line x1="16" y1="16" x2="18.4" y2="18.4"/><line x1="18.4" y1="5.6" x2="16" y2="8"/><line x1="8" y1="16" x2="5.6" y2="18.4"/>',
-    Druid: '<path d="M12 21c0-7 0-13 6-17-6 0-10 4-10 10 0 4 2 6 4 7z"/><line x1="12" y1="21" x2="12" y2="10"/>',
-    Fighter: '<line x1="12" y1="2" x2="12" y2="16"/><line x1="7" y1="6" x2="17" y2="6"/><circle cx="12" cy="19" r="2"/>',
-    Monk: '<path d="M12 3a9 9 0 1 0 6.2 15.5"/><circle cx="12" cy="12" r="1.4"/>',
-    Paladin: '<path d="M12 3l7 3v6c0 5-3 8-7 9-4-1-7-4-7-9V6l7-3z"/><line x1="12" y1="7" x2="12" y2="16"/><line x1="8" y1="11.5" x2="16" y2="11.5"/>',
-    Ranger: '<path d="M6 4c8 2 8 16 0 18"/><line x1="4" y1="12" x2="19" y2="12"/><line x1="15" y1="9" x2="19" y2="12"/><line x1="15" y1="15" x2="19" y2="12"/>',
-    Rogue: '<line x1="6" y1="19" x2="17" y2="8"/><line x1="17" y1="8" x2="21" y2="4"/><line x1="7" y1="14" x2="10" y2="17"/>',
-    Sorcerer: '<polyline points="13,3 8,12 12,12 10,21 18,10 13,10"/>',
-    Warlock: '<path d="M3 12c3-5 15-5 18 0-3 5-15 5-18 0z"/><circle cx="12" cy="12" r="2.4"/>',
-    Wizard: '<polygon points="12,3 14,9 20,9 15,13 17,19 12,15.5 7,19 9,13 4,9 10,9"/>',
-    Other: '<polygon points="12,3 20,8 20,16 12,21 4,16 4,8"/><line x1="12" y1="3" x2="12" y2="21"/><line x1="4" y1="8" x2="20" y2="16"/><line x1="20" y1="8" x2="4" y2="16"/>'
-  };
-
   var form = document.getElementById('cardForm');
-  var seals = document.querySelectorAll('[data-seal]');
 
-  function setSeal(cls){
-    var svg = '<svg viewBox="0 0 24 24">' + (ICONS[cls] || ICONS.Other) + '</svg>';
-    seals.forEach(function(el){ el.innerHTML = svg; });
-  }
+  // Sources: Player's Handbook, Xanathar's Guide to Everything, Tasha's Cauldron
+  // of Everything, Bigby Presents: Glory of the Giants, Heroes of Faerun,
+  // Ravenloft: The Horrors Within
+  var SUBCLASSES = {
+    artificer: ['Alchemist', 'Armorer', 'Artillerist', 'Cartographer'],
+    barbarian: ['Ancestral Guardian', 'Battlerager', 'Beast', 'Berserker', 'Giant', 'Storm Herald', 'Wild Heart', 'Wild Magic', 'World Tree', 'Zealot'],
+    bard: ['Creation', 'Dance', 'Eloquence', 'Glamour', 'Lore', 'Moon', 'Spirits', 'Swords', 'Valor', 'Whispers'],
+    cleric: ['Arcana', 'Death', 'Forge', 'Grave', 'Knowledge', 'Life', 'Light', 'Nature', 'Order', 'Peace', 'Tempest', 'Trickery', 'Twilight', 'War'],
+    druid: ['Dreams', 'Land', 'Moon', 'Sea', 'Shepherd', 'Spores', 'Stars', 'Wildfire'],
+    fighter: ['Arcane Archer', 'Banneret', 'Battle Master', 'Cavalier', 'Champion', 'Eldritch Knight', 'Psi Warrior', 'Rune Knight', 'Samurai'],
+    monk: ['Astral Self', 'Drunken Master', 'Four Elements', 'Kensei', 'Mercy', 'Open Hand', 'Shadow', 'Sun Soul'],
+    paladin: ['Ancients', 'Conquest', 'Devotion', 'Glory', 'Noble Genies', 'Redemption', 'Vengeance', 'Watchers'],
+    ranger: ['Beast Master', 'Fey Wanderer', 'Gloom Stalker', 'Hollow Warden', 'Horizon Walker', 'Hunter', 'Monster Slayer', 'Swarmkeeper', 'Winter Walker'],
+    rogue: ['Arcane Trickster', 'Assassin', 'Inquisitive', 'Mastermind', 'Phantom', 'Scion of the Three', 'Scout', 'Soulknife', 'Swashbuckler', 'Thief'],
+    sorcerer: ['Aberrant Mind', 'Clockwork Soul', 'Divine Soul', 'Draconic Bloodline', 'Shadow Magic', 'Spellfire', 'Storm Sorcery', 'Wild Magic'],
+    warlock: ['Archfey', 'Celestial', 'Fathomless', 'Fiend', 'Genie', 'Great Old One', 'Hexblade', 'Undead'],
+    wizard: ['Abjuration', 'Bladesinging', 'Conjuration', 'Divination', 'Enchantment', 'Evocation', 'Illusion', 'Necromancy', 'Order of Scribes', 'Transmutation', 'War Magic']
+  };
 
   function val(name, fallback){
     var el = form.querySelector('[data-field="' + name + '"]');
     var v = el ? String(el.value).trim() : '';
     return v.length ? v : fallback;
   }
+
+  function rawVal(name){
+    var el = form.querySelector('[data-field="' + name + '"]');
+    return el ? el.value : '';
+  }
+
+  var FIELD_KEYS = ['name', 'race', 'class', 'subclass', 'level', 'hp', 'ac', 'pp', 'dc'];
+
+  function readForm(){
+    var obj = {};
+    FIELD_KEYS.forEach(function(key){ obj[key] = rawVal(key); });
+    return obj;
+  }
+
+  function writeForm(obj){
+    FIELD_KEYS.forEach(function(key){
+      var el = form.querySelector('[data-field="' + key + '"]');
+      if(el) el.value = obj[key] || '';
+    });
+  }
+
+  function blankCharacter(){
+    var obj = {};
+    FIELD_KEYS.forEach(function(key){ obj[key] = ''; });
+    obj.level = '1';
+    return obj;
+  }
+
+  var characters = [readForm()];
+  var activeIndex = 0;
 
   function setOut(name, text){
     document.querySelectorAll('[data-out="' + name + '"]').forEach(function(el){
@@ -601,35 +678,261 @@
 
   function render(){
     var name = val('name', 'Unnamed Adventurer');
-    var player = val('player', '—');
     var race = val('race', 'Unknown');
     var cls = val('class', 'Other');
+    var subclass = val('subclass', '');
     var level = val('level', '1');
-    var alignment = val('alignment', '—');
-    var ac = val('ac', '—');
     var hp = val('hp', '—');
-    var speed = val('speed', '—');
-    var quirk = val('quirk', '');
+    var ac = val('ac', '—');
+    var pp = val('pp', '—');
+    var dc = val('dc', '—');
 
+    var classLine = cls + ' ' + level + (subclass ? ' (' + subclass + ')' : '');
     setOut('name', name);
-    setOut('subline', 'Level ' + level + ' ' + race + ' · ' + cls);
-    setOut('ac', ac);
+    setOut('subline', race + ' · ' + classLine);
     setOut('hp', hp);
-    setOut('speed', speed);
-    setOut('alignment', alignment);
-    setOut('player', player);
-    setOut('quirk', quirk ? '“' + quirk + '”' : '');
+    setOut('ac', ac);
+    setOut('pp', pp);
+    setOut('dc', dc);
 
-    setSeal(cls);
+    characters[activeIndex] = readForm();
+    updateActiveTabLabel();
+    updatePrintHint();
   }
+
+  function clearOnFocus(input){
+    input.addEventListener('focus', function(){
+      this.dataset.prev = this.value;
+      this.value = '';
+    });
+    input.addEventListener('blur', function(){
+      if(this.value.trim() === '' && this.dataset.prev){
+        this.value = this.dataset.prev;
+        render();
+      }
+    });
+  }
+
+  var classInput = document.getElementById('f-class');
+  var subclassInput = document.getElementById('f-subclass');
+  var subclassOptions = document.getElementById('subclassOptions');
+
+  function updateSubclassOptions(){
+    var key = classInput.value.trim().toLowerCase();
+    var list = (SUBCLASSES[key] || []).slice().sort(function(a, b){
+      return a.localeCompare(b);
+    });
+    subclassOptions.innerHTML = list.map(function(name){
+      return '<option>' + name + '</option>';
+    }).join('');
+  }
+
+  function onClassInput(){
+    updateSubclassOptions();
+    subclassInput.value = '';
+    render();
+  }
+
+  clearOnFocus(classInput);
+  clearOnFocus(subclassInput);
+  classInput.addEventListener('input', onClassInput);
+  classInput.addEventListener('blur', updateSubclassOptions);
+  updateSubclassOptions();
+
+  /* ---------- Multiple characters ---------- */
+  var charTabs = document.getElementById('charTabs');
+
+  function tabLabel(c, i){
+    return (c.name || '').trim() || ('Character ' + (i + 1));
+  }
+
+  function updateActiveTabLabel(){
+    var span = charTabs.querySelector('.char-tab.is-active span');
+    if(span) span.textContent = tabLabel(characters[activeIndex], activeIndex);
+  }
+
+  function renderTabs(){
+    charTabs.innerHTML = '';
+    characters.forEach(function(c, i){
+      var tab = document.createElement('button');
+      tab.type = 'button';
+      tab.className = 'char-tab' + (i === activeIndex ? ' is-active' : '');
+
+      var label = document.createElement('span');
+      label.textContent = tabLabel(c, i);
+      tab.appendChild(label);
+
+      if(characters.length > 1){
+        var rm = document.createElement('span');
+        rm.className = 'char-tab-remove';
+        rm.textContent = '×';
+        rm.setAttribute('role', 'button');
+        rm.setAttribute('aria-label', 'Remove ' + label.textContent);
+        rm.addEventListener('click', function(e){
+          e.stopPropagation();
+          removeCharacter(i);
+        });
+        tab.appendChild(rm);
+      }
+
+      tab.addEventListener('click', function(){ selectCharacter(i); });
+      charTabs.appendChild(tab);
+    });
+
+    var addBtn = document.createElement('button');
+    addBtn.type = 'button';
+    addBtn.className = 'char-tab char-tab-add';
+    addBtn.textContent = '+ Add character';
+    addBtn.addEventListener('click', addCharacter);
+    charTabs.appendChild(addBtn);
+  }
+
+  function selectCharacter(i){
+    activeIndex = i;
+    writeForm(characters[i]);
+    updateSubclassOptions();
+    render();
+    renderTabs();
+  }
+
+  function addCharacter(){
+    characters.push(blankCharacter());
+    selectCharacter(characters.length - 1);
+  }
+
+  function removeCharacter(i){
+    if(characters.length <= 1) return;
+    characters.splice(i, 1);
+    if(i < activeIndex){
+      activeIndex -= 1;
+    } else if(activeIndex >= characters.length){
+      activeIndex = characters.length - 1;
+    }
+    selectCharacter(activeIndex);
+  }
+
+  /* ---------- Print: card markup + page packing ---------- */
+  function esc(s){
+    var div = document.createElement('div');
+    div.textContent = s == null ? '' : String(s);
+    return div.innerHTML;
+  }
+
+  function panelMarkup(name, subline, stats){
+    var statsHtml = stats ? (
+      '<hr class="rule">' +
+      '<div class="stat-grid">' +
+        '<div class="stat-cell"><span class="stat-label">HP</span><span class="stat-value">' + esc(stats.hp) + '</span></div>' +
+        '<div class="stat-cell"><span class="stat-label">AC</span><span class="stat-value">' + esc(stats.ac) + '</span></div>' +
+        '<div class="stat-cell"><span class="stat-label">PP</span><span class="stat-value">' + esc(stats.pp) + '</span></div>' +
+        '<div class="stat-cell"><span class="stat-label">DC</span><span class="stat-value">' + esc(stats.dc) + '</span></div>' +
+      '</div>'
+    ) : '';
+    return (
+      '<div class="panel-frame"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span></div>' +
+      '<div class="panel-content">' +
+        '<p class="char-name">' + esc(name) + '</p>' +
+        '<p class="char-sub"><span>' + subline + '</span></p>' +
+        statsHtml +
+      '</div>'
+    );
+  }
+
+  function cardMarkup(c, sizeClass){
+    var name = (c.name || '').trim() || 'Unnamed Adventurer';
+    var race = (c.race || '').trim() || 'Unknown';
+    var cls = (c.class || '').trim() || 'Other';
+    var subclass = (c.subclass || '').trim();
+    var level = (c.level || '').trim() || '1';
+    var stats = {
+      hp: (c.hp || '').trim() || '—',
+      ac: (c.ac || '').trim() || '—',
+      pp: (c.pp || '').trim() || '—',
+      dc: (c.dc || '').trim() || '—'
+    };
+    var classLine = esc(cls) + ' ' + esc(level) + (subclass ? ' (' + esc(subclass) + ')' : '');
+    var subline = esc(race) + ' · ' + classLine;
+
+    return (
+      '<div class="tentcard' + (sizeClass ? ' ' + sizeClass : '') + '">' +
+        '<div class="panel panel-top panel-stats">' + panelMarkup(name, subline, stats) + '</div>' +
+        '<div class="fold-line"><span class="fold-label">fold</span></div>' +
+        '<div class="panel panel-bottom panel-simple">' + panelMarkup(name, subline, null) + '</div>' +
+      '</div>'
+    );
+  }
+
+  var tentcard = document.getElementById('tentcard');
+  var printHint = document.getElementById('printHint');
+  var printStage = document.getElementById('printStage');
+  var pageSizeStyle = document.getElementById('pageSizeStyle');
+  var sizeBtns = document.querySelectorAll('.size-btn');
+
+  function currentSizeMode(){
+    return tentcard.classList.contains('size-index') ? 'index' : 'full';
+  }
+
+  function updatePageSize(){
+    pageSizeStyle.textContent = currentSizeMode() === 'index'
+      ? '@page{ size:letter landscape; margin:0.3in; }'
+      : '@page{ size:letter portrait; margin:0.4in; }';
+  }
+
+  function updatePrintHint(){
+    var mode = currentSizeMode();
+    var n = characters.length;
+    var per = mode === 'index' ? 2 : 1;
+    var pages = Math.ceil(n / per);
+    var layout = mode === 'index'
+      ? 'Two characters per page — cut along the solid outer lines, then fold each along its dashed line.'
+      : 'One character per page — fold each along its dashed line.';
+    printHint.textContent =
+      'Printing ' + n + ' character' + (n === 1 ? '' : 's') + ' on ' + pages + ' page' + (pages === 1 ? '' : 's') + '. ' +
+      layout + ' Enable "Background graphics" in the print dialog for full color.';
+  }
+
+  function buildPrintStage(){
+    var mode = currentSizeMode();
+    var html = '';
+    if(mode === 'full'){
+      characters.forEach(function(c){
+        html += '<div class="print-page">' + cardMarkup(c, '') + '</div>';
+      });
+    } else {
+      for(var i = 0; i < characters.length; i += 2){
+        var pair = cardMarkup(characters[i], 'size-index');
+        if(characters[i + 1]) pair += cardMarkup(characters[i + 1], 'size-index');
+        html += '<div class="print-page print-page-pair">' + pair + '</div>';
+      }
+    }
+    printStage.innerHTML = html;
+  }
+
+  document.getElementById('printBtn').addEventListener('click', function(){
+    buildPrintStage();
+    window.print();
+  });
+
+  sizeBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var size = btn.getAttribute('data-size');
+      sizeBtns.forEach(function(b){
+        var active = b === btn;
+        b.classList.toggle('is-active', active);
+        b.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+      tentcard.classList.toggle('size-index', size === 'index');
+      updatePageSize();
+      updatePrintHint();
+    });
+  });
+
+  updatePageSize();
 
   form.addEventListener('input', render);
   form.addEventListener('change', render);
   render();
-
-  document.getElementById('printBtn').addEventListener('click', function(){
-    window.print();
-  });
+  renderTabs();
 })();
 </script>
 </body>
