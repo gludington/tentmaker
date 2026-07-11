@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tent Card Forge — D&amp;D Character Tent Card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --parchment:#F3E7C9;
+    --parchment-shadow:#D9C08F;
+    --ink:#2A1B12;
+    --burgundy:#6E2430;
+    --brass:#A9812E;
+    --brass-light:#C9A659;
+    --felt:#24322A;
+
+    --font-display:'Fraunces','Iowan Old Style','Palatino Linotype',Georgia,serif;
+    --font-body:'EB Garamond','Iowan Old Style',Palatino,Georgia,serif;
+  }
+
+  *{box-sizing:border-box;}
+
+  html,body{margin:0;padding:0;}
+
+  body{
+    background:
+      radial-gradient(ellipse at 50% 0%, #33452f 0%, var(--felt) 60%);
+    color:var(--parchment);
+    font-family:var(--font-body);
+    min-height:100vh;
+  }
+
+  .app{
+    max-width:1180px;
+    margin:0 auto;
+    padding:40px 24px 80px;
+  }
+
+  .masthead{
+    text-align:center;
+    margin-bottom:36px;
+  }
+  .masthead .eyebrow{
+    font-family:var(--font-body);
+    font-variant:small-caps;
+    letter-spacing:.14em;
+    color:var(--brass-light);
+    font-size:.85rem;
+    margin:0 0 6px;
+  }
+  .masthead h1{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:clamp(1.9rem,4vw,2.9rem);
+    margin:0 0 8px;
+    color:var(--parchment);
+    letter-spacing:.01em;
+  }
+  .masthead p{
+    margin:0;
+    color:#c8bfa1;
+    font-size:1.02rem;
+    max-width:46ch;
+    margin:0 auto;
+  }
+
+  .workspace{
+    display:grid;
+    grid-template-columns:minmax(280px,340px) 1fr;
+    gap:32px;
+    align-items:start;
+  }
+  @media (max-width:860px){
+    .workspace{grid-template-columns:1fr;}
+  }
+
+  /* ---------- Scribe's desk (form) ---------- */
+  .desk{
+    background:linear-gradient(180deg,#2c2019,#231910);
+    border:1px solid #4a3624;
+    border-radius:10px;
+    padding:22px 22px 26px;
+    box-shadow:0 18px 40px -18px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.03);
+  }
+  .desk h2{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:1.1rem;
+    color:var(--brass-light);
+    margin:0 0 4px;
+    letter-spacing:.02em;
+  }
+  .desk .desk-sub{
+    font-size:.85rem;
+    color:#9c9078;
+    margin:0 0 18px;
+  }
+
+  fieldset{
+    border:none;
+    padding:0;
+    margin:0 0 20px;
+  }
+  fieldset legend{
+    font-variant:small-caps;
+    letter-spacing:.12em;
+    font-size:.82rem;
+    color:var(--brass);
+    padding:0 0 8px;
+    border-bottom:1px solid #4a3624;
+    width:100%;
+    margin-bottom:12px;
+  }
+
+  .field{
+    margin-bottom:12px;
+  }
+  .field label{
+    display:block;
+    font-size:.78rem;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:#a99a7c;
+    margin-bottom:5px;
+  }
+  .field input,
+  .field select{
+    width:100%;
+    background:#1c140d;
+    border:1px solid #4a3624;
+    color:var(--parchment);
+    font-family:var(--font-body);
+    font-size:1rem;
+    padding:8px 10px;
+    border-radius:5px;
+    outline:none;
+  }
+  .field input:focus,
+  .field select:focus{
+    border-color:var(--brass);
+    box-shadow:0 0 0 3px rgba(169,129,46,.25);
+  }
+  .field-row{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:10px;
+  }
+
+  /* ---------- Stage ---------- */
+  .stage{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:18px;
+  }
+
+  .table-surface{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    padding:28px 12px;
+    background:
+      radial-gradient(ellipse at 50% 30%, rgba(0,0,0,0) 0%, rgba(0,0,0,.35) 100%);
+    border-radius:14px;
+  }
+
+  .tentcard{
+    position:relative;
+    width:min(430px,92vw);
+    aspect-ratio:8.5/11;
+    display:flex;
+    flex-direction:column;
+    background:var(--parchment);
+    box-shadow:0 30px 60px -20px rgba(0,0,0,.65), 0 2px 0 rgba(0,0,0,.2);
+    border-radius:3px;
+    overflow:hidden;
+  }
+
+  .panel{
+    flex:1 1 50%;
+    min-height:0;
+    position:relative;
+    padding:6% 7%;
+    display:flex;
+    align-items:center;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(255,255,255,.25), rgba(255,255,255,0) 55%),
+      var(--parchment);
+    color:var(--ink);
+  }
+  .panel-top{ transform:rotate(180deg); }
+
+  .panel-frame{
+    position:absolute;
+    inset:5%;
+    border:1px solid var(--brass);
+    pointer-events:none;
+  }
+  .panel-frame::before{
+    content:"";
+    position:absolute;
+    inset:4px;
+    border:1px solid rgba(169,129,46,.5);
+  }
+  .corner{
+    position:absolute;
+    width:16px;
+    height:16px;
+    border:none;
+  }
+  .corner::before,.corner::after{
+    content:"";
+    position:absolute;
+    background:var(--brass);
+  }
+  .corner.tl{top:-1px;left:-1px;}
+  .corner.tr{top:-1px;right:-1px;transform:scaleX(-1);}
+  .corner.bl{bottom:-1px;left:-1px;transform:scaleY(-1);}
+  .corner.br{bottom:-1px;right:-1px;transform:scale(-1,-1);}
+  .corner::before{width:16px;height:2px;top:0;left:0;}
+  .corner::after{width:2px;height:16px;top:0;left:0;}
+
+  .panel-content{
+    position:relative;
+    z-index:1;
+    display:flex;
+    align-items:center;
+    gap:5%;
+    width:100%;
+  }
+
+  .seal{
+    flex:0 0 auto;
+    width:19%;
+    aspect-ratio:1;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #8a2e33, var(--burgundy) 70%, #551c22 100%);
+    border:2px solid var(--brass);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 2px 4px rgba(0,0,0,.25), inset 0 0 0 3px rgba(0,0,0,.15);
+  }
+  .seal svg{
+    width:56%;
+    height:56%;
+    stroke:var(--brass-light);
+    fill:none;
+    stroke-width:1.4;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+  }
+
+  .text-block{
+    flex:1 1 auto;
+    min-width:0;
+  }
+  .char-name{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(1.1rem,5.6cqw,1.9rem);
+    line-height:1.05;
+    margin:0 0 3px;
+    color:var(--ink);
+    word-break:break-word;
+  }
+  .char-sub{
+    font-family:var(--font-body);
+    font-style:italic;
+    font-size:.92rem;
+    color:var(--burgundy);
+    margin:0 0 8px;
+    letter-spacing:.01em;
+  }
+  .rule{
+    border:none;
+    border-top:1px solid var(--brass);
+    margin:0 0 8px;
+    opacity:.7;
+  }
+  .stat-row{
+    display:flex;
+    gap:14px;
+    margin-bottom:8px;
+    flex-wrap:wrap;
+  }
+  .stat{
+    text-align:left;
+  }
+  .stat .stat-label{
+    font-variant:small-caps;
+    letter-spacing:.1em;
+    font-size:.68rem;
+    color:var(--burgundy);
+    display:block;
+  }
+  .stat .stat-value{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:1.05rem;
+    color:var(--ink);
+    display:block;
+    line-height:1.2;
+  }
+  .meta-line{
+    font-size:.78rem;
+    color:#4a3624;
+    margin:0 0 6px;
+  }
+  .meta-line b{
+    color:var(--ink);
+    font-weight:600;
+  }
+  .quirk{
+    font-style:italic;
+    font-size:.76rem;
+    color:var(--burgundy);
+    margin:0;
+    line-height:1.3;
+  }
+
+  .fold-line{
+    position:absolute;
+    left:0;right:0;top:50%;
+    height:0;
+    border-top:2px dashed var(--brass);
+    transform:translateY(-1px);
+    z-index:2;
+    display:flex;
+    align-items:center;
+  }
+  .fold-line .fold-label{
+    position:absolute;
+    left:8px;
+    top:50%;
+    transform:translateY(-50%);
+    background:var(--parchment);
+    font-variant:small-caps;
+    letter-spacing:.1em;
+    font-size:.62rem;
+    color:var(--brass);
+    padding:0 6px;
+  }
+
+  .print-btn{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:1rem;
+    letter-spacing:.03em;
+    color:var(--felt);
+    background:linear-gradient(180deg,var(--brass-light),var(--brass));
+    border:none;
+    padding:12px 30px;
+    border-radius:6px;
+    cursor:pointer;
+    box-shadow:0 8px 18px -8px rgba(0,0,0,.6);
+  }
+  .print-btn:hover{filter:brightness(1.06);}
+  .print-btn:active{transform:translateY(1px);}
+
+  .print-hint{
+    font-size:.8rem;
+    color:#9c9078;
+    text-align:center;
+    max-width:40ch;
+    margin:0;
+  }
+
+  /* ---------- Print ---------- */
+  @page{
+    size:letter portrait;
+    margin:0.4in;
+  }
+  @media print{
+    body{background:#fff;color:#000;}
+    .app{max-width:none;margin:0;padding:0;}
+    .masthead,.desk,.print-btn,.print-hint{display:none !important;}
+    .workspace{display:block;}
+    .stage{display:block;}
+    .table-surface{
+      padding:0;
+      background:none;
+      display:block;
+    }
+    .tentcard{
+      width:7.7in;
+      height:10.2in;
+      margin:0;
+      box-shadow:none;
+      border-radius:0;
+      aspect-ratio:auto;
+      -webkit-print-color-adjust:exact;
+      print-color-adjust:exact;
+    }
+    .panel{
+      -webkit-print-color-adjust:exact;
+      print-color-adjust:exact;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="masthead">
+    <p class="eyebrow">Tent Card Forge</p>
+    <h1>Character Tent Card</h1>
+    <p>Fill in your character, then print. The sheet folds once down the middle into a standing card readable from either side of the table.</p>
+  </header>
+
+  <main class="workspace">
+
+    <section class="desk" aria-label="Character details">
+      <h2>Scribe's Desk</h2>
+      <p class="desk-sub">Every field updates the card to the right as you type.</p>
+
+      <form id="cardForm" autocomplete="off">
+        <fieldset>
+          <legend>Identity</legend>
+          <div class="field">
+            <label for="f-name">Character name</label>
+            <input id="f-name" data-field="name" type="text" value="Aria Nightshade" maxlength="40">
+          </div>
+          <div class="field">
+            <label for="f-player">Player name</label>
+            <input id="f-player" data-field="player" type="text" value="Greg" maxlength="30">
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="f-race">Race</label>
+              <input id="f-race" data-field="race" type="text" value="Half-Elf" maxlength="24">
+            </div>
+            <div class="field">
+              <label for="f-level">Level</label>
+              <input id="f-level" data-field="level" type="number" min="1" max="20" value="5">
+            </div>
+          </div>
+          <div class="field">
+            <label for="f-class">Class</label>
+            <select id="f-class" data-field="class">
+              <option>Barbarian</option>
+              <option>Bard</option>
+              <option>Cleric</option>
+              <option>Druid</option>
+              <option>Fighter</option>
+              <option>Monk</option>
+              <option>Paladin</option>
+              <option>Ranger</option>
+              <option>Rogue</option>
+              <option>Sorcerer</option>
+              <option>Warlock</option>
+              <option selected>Wizard</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-background">Background</label>
+            <input id="f-background" data-field="background" type="text" value="Sage" maxlength="24">
+          </div>
+          <div class="field">
+            <label for="f-alignment">Alignment</label>
+            <select id="f-alignment" data-field="alignment">
+              <option>Lawful Good</option>
+              <option>Neutral Good</option>
+              <option selected>Chaotic Good</option>
+              <option>Lawful Neutral</option>
+              <option>True Neutral</option>
+              <option>Chaotic Neutral</option>
+              <option>Lawful Evil</option>
+              <option>Neutral Evil</option>
+              <option>Chaotic Evil</option>
+            </select>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Combat Stats</legend>
+          <div class="field-row">
+            <div class="field">
+              <label for="f-ac">AC</label>
+              <input id="f-ac" data-field="ac" type="text" value="15" maxlength="6">
+            </div>
+            <div class="field">
+              <label for="f-hp">HP</label>
+              <input id="f-hp" data-field="hp" type="text" value="32" maxlength="8">
+            </div>
+            <div class="field">
+              <label for="f-speed">Speed</label>
+              <input id="f-speed" data-field="speed" type="text" value="30 ft" maxlength="10">
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Flavor</legend>
+          <div class="field">
+            <label for="f-quirk">Motto / quirk (optional)</label>
+            <input id="f-quirk" data-field="quirk" type="text" value="Knowledge is the only treasure that multiplies when shared." maxlength="90">
+          </div>
+        </fieldset>
+      </form>
+    </section>
+
+    <section class="stage" aria-label="Tent card preview">
+      <div class="table-surface">
+        <div class="tentcard" id="tentcard">
+          <div class="panel panel-top">
+            <div class="panel-frame">
+              <span class="corner tl"></span><span class="corner tr"></span>
+              <span class="corner bl"></span><span class="corner br"></span>
+            </div>
+            <div class="panel-content">
+              <div class="seal" data-seal></div>
+              <div class="text-block">
+                <p class="char-name" data-out="name"></p>
+                <p class="char-sub"><span data-out="subline"></span></p>
+                <hr class="rule">
+                <div class="stat-row">
+                  <div class="stat"><span class="stat-label">AC</span><span class="stat-value" data-out="ac"></span></div>
+                  <div class="stat"><span class="stat-label">HP</span><span class="stat-value" data-out="hp"></span></div>
+                  <div class="stat"><span class="stat-label">Speed</span><span class="stat-value" data-out="speed"></span></div>
+                </div>
+                <p class="meta-line"><b data-out="alignment"></b> &nbsp;·&nbsp; played by <b data-out="player"></b></p>
+                <p class="quirk" data-out="quirk"></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="fold-line"><span class="fold-label">fold</span></div>
+
+          <div class="panel panel-bottom">
+            <div class="panel-frame">
+              <span class="corner tl"></span><span class="corner tr"></span>
+              <span class="corner bl"></span><span class="corner br"></span>
+            </div>
+            <div class="panel-content">
+              <div class="seal" data-seal></div>
+              <div class="text-block">
+                <p class="char-name" data-out="name"></p>
+                <p class="char-sub"><span data-out="subline"></span></p>
+                <hr class="rule">
+                <div class="stat-row">
+                  <div class="stat"><span class="stat-label">AC</span><span class="stat-value" data-out="ac"></span></div>
+                  <div class="stat"><span class="stat-label">HP</span><span class="stat-value" data-out="hp"></span></div>
+                  <div class="stat"><span class="stat-label">Speed</span><span class="stat-value" data-out="speed"></span></div>
+                </div>
+                <p class="meta-line"><b data-out="alignment"></b> &nbsp;·&nbsp; played by <b data-out="player"></b></p>
+                <p class="quirk" data-out="quirk"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="print-btn" id="printBtn">Print Tent Card</button>
+      <p class="print-hint">In the print dialog, enable "Background graphics" for full color, and print single-sided. Fold once along the dashed line.</p>
+    </section>
+
+  </main>
+</div>
+
+<script>
+(function(){
+  var ICONS = {
+    Barbarian: '<line x1="6" y1="19" x2="15" y2="10"/><path d="M14 6c2-2 5-2 5 1s-2 4-5 4l-3-1z"/>',
+    Bard: '<circle cx="9" cy="16" r="3.2"/><line x1="12" y1="16" x2="12" y2="5"/><path d="M12 5c2-1 4-1 5 1"/>',
+    Cleric: '<circle cx="12" cy="12" r="3"/><line x1="12" y1="3" x2="12" y2="6.5"/><line x1="12" y1="17.5" x2="12" y2="21"/><line x1="3" y1="12" x2="6.5" y2="12"/><line x1="17.5" y1="12" x2="21" y2="12"/><line x1="5.6" y1="5.6" x2="8" y2="8"/><line x1="16" y1="16" x2="18.4" y2="18.4"/><line x1="18.4" y1="5.6" x2="16" y2="8"/><line x1="8" y1="16" x2="5.6" y2="18.4"/>',
+    Druid: '<path d="M12 21c0-7 0-13 6-17-6 0-10 4-10 10 0 4 2 6 4 7z"/><line x1="12" y1="21" x2="12" y2="10"/>',
+    Fighter: '<line x1="12" y1="2" x2="12" y2="16"/><line x1="7" y1="6" x2="17" y2="6"/><circle cx="12" cy="19" r="2"/>',
+    Monk: '<path d="M12 3a9 9 0 1 0 6.2 15.5"/><circle cx="12" cy="12" r="1.4"/>',
+    Paladin: '<path d="M12 3l7 3v6c0 5-3 8-7 9-4-1-7-4-7-9V6l7-3z"/><line x1="12" y1="7" x2="12" y2="16"/><line x1="8" y1="11.5" x2="16" y2="11.5"/>',
+    Ranger: '<path d="M6 4c8 2 8 16 0 18"/><line x1="4" y1="12" x2="19" y2="12"/><line x1="15" y1="9" x2="19" y2="12"/><line x1="15" y1="15" x2="19" y2="12"/>',
+    Rogue: '<line x1="6" y1="19" x2="17" y2="8"/><line x1="17" y1="8" x2="21" y2="4"/><line x1="7" y1="14" x2="10" y2="17"/>',
+    Sorcerer: '<polyline points="13,3 8,12 12,12 10,21 18,10 13,10"/>',
+    Warlock: '<path d="M3 12c3-5 15-5 18 0-3 5-15 5-18 0z"/><circle cx="12" cy="12" r="2.4"/>',
+    Wizard: '<polygon points="12,3 14,9 20,9 15,13 17,19 12,15.5 7,19 9,13 4,9 10,9"/>',
+    Other: '<polygon points="12,3 20,8 20,16 12,21 4,16 4,8"/><line x1="12" y1="3" x2="12" y2="21"/><line x1="4" y1="8" x2="20" y2="16"/><line x1="20" y1="8" x2="4" y2="16"/>'
+  };
+
+  var form = document.getElementById('cardForm');
+  var seals = document.querySelectorAll('[data-seal]');
+
+  function setSeal(cls){
+    var svg = '<svg viewBox="0 0 24 24">' + (ICONS[cls] || ICONS.Other) + '</svg>';
+    seals.forEach(function(el){ el.innerHTML = svg; });
+  }
+
+  function val(name, fallback){
+    var el = form.querySelector('[data-field="' + name + '"]');
+    var v = el ? String(el.value).trim() : '';
+    return v.length ? v : fallback;
+  }
+
+  function setOut(name, text){
+    document.querySelectorAll('[data-out="' + name + '"]').forEach(function(el){
+      el.textContent = text;
+    });
+  }
+
+  function render(){
+    var name = val('name', 'Unnamed Adventurer');
+    var player = val('player', '—');
+    var race = val('race', 'Unknown');
+    var cls = val('class', 'Other');
+    var level = val('level', '1');
+    var alignment = val('alignment', '—');
+    var ac = val('ac', '—');
+    var hp = val('hp', '—');
+    var speed = val('speed', '—');
+    var quirk = val('quirk', '');
+
+    setOut('name', name);
+    setOut('subline', 'Level ' + level + ' ' + race + ' · ' + cls);
+    setOut('ac', ac);
+    setOut('hp', hp);
+    setOut('speed', speed);
+    setOut('alignment', alignment);
+    setOut('player', player);
+    setOut('quirk', quirk ? '“' + quirk + '”' : '');
+
+    setSeal(cls);
+  }
+
+  form.addEventListener('input', render);
+  form.addEventListener('change', render);
+  render();
+
+  document.getElementById('printBtn').addEventListener('click', function(){
+    window.print();
+  });
+})();
+</script>
+</body>
+</html>
