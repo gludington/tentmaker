@@ -214,6 +214,32 @@
     gap:10px;
   }
 
+  .blank-toggle{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    background:#1c140d;
+    border:1px solid #4a3624;
+    border-radius:6px;
+    padding:10px 12px;
+    margin-bottom:18px;
+    cursor:pointer;
+  }
+  .blank-toggle input{
+    width:auto;
+    flex:0 0 auto;
+    accent-color:var(--brass);
+    cursor:pointer;
+  }
+  .blank-toggle span{
+    font-size:.83rem;
+    color:#c8bfa1;
+    line-height:1.35;
+  }
+  #cardForm.blank-mode fieldset{
+    opacity:.4;
+  }
+
   /* ---------- Stage ---------- */
   .stage{
     display:flex;
@@ -272,6 +298,11 @@
     width:min(300px,72vw);
     aspect-ratio:5/6;
   }
+  .tentcard.size-place{
+    width:min(360px,80vw);
+    aspect-ratio:5/3;
+    flex-direction:row;
+  }
 
   .panel{
     flex:1 1 50%;
@@ -329,6 +360,15 @@
     text-align:center;
     width:100%;
   }
+  .tentcard.size-place .panel-content{
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:auto;
+    height:100cqw;
+    aspect-ratio:6/5;
+    transform:translate(-50%,-50%) rotate(-90deg);
+  }
 
   .char-name{
     font-family:var(--font-display);
@@ -338,8 +378,9 @@
     color:var(--ink);
     word-break:break-word;
   }
-  .panel-simple .char-name{ font-size:clamp(2.1rem,19cqw,5.4rem); }
-  .panel-stats .char-name{ font-size:clamp(1.6rem,13cqw,3.5rem); }
+  .panel-simple .char-name{ font-size:clamp(2.1rem,18cqw,7.1rem); }
+  .tentcard.size-place .panel-simple .char-name{ font-size:clamp(1.4rem,21cqw,3.2rem); }
+  .panel-stats .char-name{ font-size:clamp(1.6rem,13cqw,5.1rem); }
 
   .char-sub{
     font-family:var(--font-body);
@@ -348,8 +389,14 @@
     letter-spacing:.01em;
     margin:0;
   }
-  .panel-simple .char-sub{ font-size:clamp(1.05rem,7.2cqw,2.1rem); margin-top:1.5cqw; }
-  .panel-stats .char-sub{ font-size:clamp(.85rem,5cqw,1.5rem); margin-top:1cqw; }
+  .panel-simple .char-sub{ font-size:clamp(1.05rem,7.2cqw,2.8rem); margin-top:1.5cqw; }
+  .tentcard.size-place .panel-simple .char-sub{ margin-top:8px; }
+  .panel-stats .char-sub{ font-size:clamp(.85rem,5cqw,2rem); margin-top:1cqw; }
+
+  .tentcard.is-blank .char-name,
+  .tentcard.is-blank .char-sub{
+    visibility:hidden;
+  }
 
   .rule{
     border:none;
@@ -370,7 +417,7 @@
     display:block;
     font-variant:small-caps;
     letter-spacing:.08em;
-    font-size:clamp(.6rem,3cqw,.95rem);
+    font-size:clamp(.6rem,3cqw,1.2rem);
     color:var(--ink);
     margin-bottom:.5cqw;
   }
@@ -378,7 +425,7 @@
     display:block;
     font-family:var(--font-display);
     font-weight:700;
-    font-size:clamp(1.3rem,8cqw,2.6rem);
+    font-size:clamp(1.3rem,8cqw,3.2rem);
     color:var(--ink);
     line-height:1;
   }
@@ -404,6 +451,18 @@
     font-size:.62rem;
     color:var(--brass);
     padding:0 6px;
+  }
+  .fold-line.fold-vertical{
+    left:50%;right:auto;top:0;bottom:0;
+    height:auto;width:0;
+    border-top:none;
+    border-left:2px dashed var(--brass);
+    transform:translateX(-1px);
+    flex-direction:column;
+  }
+  .fold-line.fold-vertical .fold-label{
+    left:50%;top:8px;
+    transform:translate(-50%,0);
   }
 
   .print-btn{
@@ -444,7 +503,6 @@
     break-after:auto;
     page-break-after:auto;
   }
-  .print-page-pair{ gap:0.25in; }
 
   /* ---------- Print ---------- */
   @media print{
@@ -466,6 +524,11 @@
     .tentcard.size-index{
       width:5in;
       height:6in;
+      border:1pt solid var(--ink);
+    }
+    .tentcard.size-place{
+      width:5in;
+      height:3in;
       border:1pt solid var(--ink);
     }
     .panel{
@@ -494,11 +557,16 @@
       <div class="char-tabs" id="charTabs"></div>
 
       <form id="cardForm" autocomplete="off">
+        <label class="blank-toggle">
+          <input type="checkbox" id="f-blank">
+          <span>Blank card — shows labels only, so a player can fill this one in by hand.</span>
+        </label>
+
         <fieldset>
           <legend>Identity — on both faces</legend>
           <div class="field">
             <label for="f-name">Character name</label>
-            <input id="f-name" data-field="name" type="text" value="Aria Nightshade" maxlength="40">
+            <input id="f-name" data-field="name" type="text" value="Glyn Weyland" maxlength="40">
           </div>
           <div class="field">
             <label for="f-race">Race</label>
@@ -507,7 +575,7 @@
           <div class="field-row">
             <div class="field">
               <label for="f-class">Class <span class="help-icon" tabindex="0" aria-label="Select one from the list, or type your own." title="Select one from the list, or type your own.">?</span></label>
-              <input id="f-class" data-field="class" type="text" list="classOptions" value="Wizard" maxlength="24">
+              <input id="f-class" data-field="class" type="text" list="classOptions" value="Bard" maxlength="24">
               <datalist id="classOptions">
                 <option>Artificer</option>
                 <option>Barbarian</option>
@@ -531,7 +599,7 @@
           </div>
           <div class="field">
             <label for="f-subclass">Subclass <span class="help-icon" tabindex="0" aria-label="Select one from the list, or type your own." title="Select one from the list, or type your own.">?</span></label>
-            <input id="f-subclass" data-field="subclass" type="text" list="subclassOptions" value="Evocation" maxlength="30">
+            <input id="f-subclass" data-field="subclass" type="text" list="subclassOptions" value="Lore" maxlength="30">
             <datalist id="subclassOptions"></datalist>
           </div>
         </fieldset>
@@ -565,7 +633,8 @@
     <section class="stage" aria-label="Tent card preview">
       <div class="size-toggle" role="radiogroup" aria-label="Card size">
         <button type="button" class="size-btn is-active" data-size="full" aria-pressed="true">Full Page</button>
-        <button type="button" class="size-btn" data-size="index" aria-pressed="false">Index Card (3×5)</button>
+        <button type="button" class="size-btn" data-size="index" aria-pressed="false">Index Card (Two 3×5 Sides)</button>
+        <button type="button" class="size-btn" data-size="place" aria-pressed="false">Place Card (One Folded 3x5 Card)</button>
       </div>
       <div class="table-surface">
         <div class="tentcard" id="tentcard">
@@ -646,10 +715,12 @@
   }
 
   var FIELD_KEYS = ['name', 'race', 'class', 'subclass', 'level', 'hp', 'ac', 'pp', 'dc'];
+  var blankCheckbox = document.getElementById('f-blank');
 
   function readForm(){
     var obj = {};
     FIELD_KEYS.forEach(function(key){ obj[key] = rawVal(key); });
+    obj.blank = blankCheckbox.checked;
     return obj;
   }
 
@@ -658,12 +729,14 @@
       var el = form.querySelector('[data-field="' + key + '"]');
       if(el) el.value = obj[key] || '';
     });
+    blankCheckbox.checked = !!obj.blank;
   }
 
   function blankCharacter(){
     var obj = {};
     FIELD_KEYS.forEach(function(key){ obj[key] = ''; });
     obj.level = '1';
+    obj.blank = false;
     return obj;
   }
 
@@ -676,20 +749,34 @@
     });
   }
 
-  function render(){
-    var name = val('name', 'Unnamed Adventurer');
-    var race = val('race', 'Unknown');
-    var cls = val('class', 'Other');
-    var subclass = val('subclass', '');
-    var level = val('level', '1');
-    var hp = val('hp', '—');
-    var ac = val('ac', '—');
-    var pp = val('pp', '—');
-    var dc = val('dc', '—');
+  var BLANK_CELL = ' ';
 
-    var classLine = cls + ' ' + level + (subclass ? ' (' + subclass + ')' : '');
+  function render(){
+    var isBlank = blankCheckbox.checked;
+    form.classList.toggle('blank-mode', isBlank);
+    tentcard.classList.toggle('is-blank', isBlank);
+
+    var name, subline, hp, ac, pp, dc;
+    if(isBlank){
+      name = 'Name';
+      subline = 'Some Race - Some class 5 (subclass)';
+      hp = ac = pp = dc = BLANK_CELL;
+    } else {
+      name = val('name', 'Unnamed Adventurer');
+      var race = val('race', 'Unknown');
+      var cls = val('class', 'Other');
+      var subclass = val('subclass', '');
+      var level = val('level', '1');
+      var classLine = cls + ' ' + level + (subclass ? ' (' + subclass + ')' : '');
+      subline = race + ' · ' + classLine;
+      hp = val('hp', '—');
+      ac = val('ac', '—');
+      pp = val('pp', '—');
+      dc = val('dc', '—');
+    }
+
     setOut('name', name);
-    setOut('subline', race + ' · ' + classLine);
+    setOut('subline', subline);
     setOut('hp', hp);
     setOut('ac', ac);
     setOut('pp', pp);
@@ -739,11 +826,14 @@
   classInput.addEventListener('blur', updateSubclassOptions);
   updateSubclassOptions();
 
+  blankCheckbox.addEventListener('change', render);
+
   /* ---------- Multiple characters ---------- */
   var charTabs = document.getElementById('charTabs');
 
   function tabLabel(c, i){
-    return (c.name || '').trim() || ('Character ' + (i + 1));
+    var base = (c.name || '').trim() || ('Character ' + (i + 1));
+    return c.blank ? base + ' (blank)' : base;
   }
 
   function updateActiveTabLabel(){
@@ -839,27 +929,35 @@
   }
 
   function cardMarkup(c, sizeClass){
-    var name = (c.name || '').trim() || 'Unnamed Adventurer';
-    var race = (c.race || '').trim() || 'Unknown';
-    var cls = (c.class || '').trim() || 'Other';
-    var subclass = (c.subclass || '').trim();
-    var level = (c.level || '').trim() || '1';
-    var stats = {
-      hp: (c.hp || '').trim() || '—',
-      ac: (c.ac || '').trim() || '—',
-      pp: (c.pp || '').trim() || '—',
-      dc: (c.dc || '').trim() || '—'
-    };
-    var classLine = esc(cls) + ' ' + esc(level) + (subclass ? ' (' + esc(subclass) + ')' : '');
-    var subline = esc(race) + ' · ' + classLine;
+    var name, subline, stats;
+    if(c.blank){
+      name = 'Name';
+      subline = 'Race, Class &amp; Level';
+      stats = { hp: BLANK_CELL, ac: BLANK_CELL, pp: BLANK_CELL, dc: BLANK_CELL };
+    } else {
+      name = (c.name || '').trim() || 'Unnamed Adventurer';
+      var race = (c.race || '').trim() || 'Unknown';
+      var cls = (c.class || '').trim() || 'Other';
+      var subclass = (c.subclass || '').trim();
+      var level = (c.level || '').trim() || '1';
+      stats = {
+        hp: (c.hp || '').trim() || '—',
+        ac: (c.ac || '').trim() || '—',
+        pp: (c.pp || '').trim() || '—',
+        dc: (c.dc || '').trim() || '—'
+      };
+      var classLine = esc(cls) + ' ' + esc(level) + (subclass ? ' (' + esc(subclass) + ')' : '');
+      subline = esc(race) + ' · ' + classLine;
+    }
 
-    return (
-      '<div class="tentcard' + (sizeClass ? ' ' + sizeClass : '') + '">' +
-        '<div class="panel panel-top panel-stats">' + panelMarkup(name, subline, stats) + '</div>' +
-        '<div class="fold-line"><span class="fold-label">fold</span></div>' +
-        '<div class="panel panel-bottom panel-simple">' + panelMarkup(name, subline, null) + '</div>' +
-      '</div>'
-    );
+    var foldClass = sizeClass === 'size-place' ? ' fold-vertical' : '';
+    var content =
+      '<div class="panel panel-top panel-stats">' + panelMarkup(name, subline, stats) + '</div>' +
+      '<div class="fold-line' + foldClass + '"><span class="fold-label">fold</span></div>' +
+      '<div class="panel panel-bottom panel-simple">' + panelMarkup(name, subline, null) + '</div>';
+
+    var blankClass = c.blank ? ' is-blank' : '';
+    return '<div class="tentcard' + (sizeClass ? ' ' + sizeClass : '') + blankClass + '">' + content + '</div>';
   }
 
   var tentcard = document.getElementById('tentcard');
@@ -869,22 +967,39 @@
   var sizeBtns = document.querySelectorAll('.size-btn');
 
   function currentSizeMode(){
-    return tentcard.classList.contains('size-index') ? 'index' : 'full';
+    if(tentcard.classList.contains('size-place')) return 'place';
+    if(tentcard.classList.contains('size-index')) return 'index';
+    return 'full';
+  }
+
+  // Usable page area (landscape/portrait, minus margins) and flat card size per mode, in inches.
+  var PRINT_LAYOUT = {
+    full:  { pageW: 7.7,  pageH: 10.2, cardW: 7.7, cardH: 10.2, sizeClass: '',           landscape: false },
+    index: { pageW: 10.4, pageH: 7.9,  cardW: 5,   cardH: 6,    sizeClass: 'size-index', landscape: true  },
+    place: { pageW: 10.4, pageH: 7.9,  cardW: 5,   cardH: 3,    sizeClass: 'size-place', landscape: true  }
+  };
+
+  function pageCapacity(mode){
+    var l = PRINT_LAYOUT[mode];
+    var cols = Math.max(1, Math.floor(l.pageW / l.cardW));
+    var rows = Math.max(1, Math.floor(l.pageH / l.cardH));
+    return { cols: cols, rows: rows, perPage: cols * rows };
   }
 
   function updatePageSize(){
-    pageSizeStyle.textContent = currentSizeMode() === 'index'
+    var mode = currentSizeMode();
+    pageSizeStyle.textContent = PRINT_LAYOUT[mode].landscape
       ? '@page{ size:letter landscape; margin:0.3in; }'
       : '@page{ size:letter portrait; margin:0.4in; }';
   }
 
   function updatePrintHint(){
     var mode = currentSizeMode();
+    var cap = pageCapacity(mode);
     var n = characters.length;
-    var per = mode === 'index' ? 2 : 1;
-    var pages = Math.ceil(n / per);
-    var layout = mode === 'index'
-      ? 'Two characters per page — cut along the solid outer lines, then fold each along its dashed line.'
+    var pages = Math.ceil(n / cap.perPage);
+    var layout = cap.perPage > 1
+      ? 'Up to ' + cap.perPage + ' characters per page — cut along the solid outer lines, then fold each along its dashed line.'
       : 'One character per page — fold each along its dashed line.';
     printHint.textContent =
       'Printing ' + n + ' character' + (n === 1 ? '' : 's') + ' on ' + pages + ' page' + (pages === 1 ? '' : 's') + '. ' +
@@ -893,17 +1008,16 @@
 
   function buildPrintStage(){
     var mode = currentSizeMode();
+    var cap = pageCapacity(mode);
+    var sizeClass = PRINT_LAYOUT[mode].sizeClass;
     var html = '';
-    if(mode === 'full'){
-      characters.forEach(function(c){
-        html += '<div class="print-page">' + cardMarkup(c, '') + '</div>';
-      });
-    } else {
-      for(var i = 0; i < characters.length; i += 2){
-        var pair = cardMarkup(characters[i], 'size-index');
-        if(characters[i + 1]) pair += cardMarkup(characters[i + 1], 'size-index');
-        html += '<div class="print-page print-page-pair">' + pair + '</div>';
-      }
+    for(var i = 0; i < characters.length; i += cap.perPage){
+      var group = characters.slice(i, i + cap.perPage);
+      var cardsHtml = group.map(function(c){ return cardMarkup(c, sizeClass); }).join('');
+      var gridStyle = cap.perPage > 1
+        ? ' style="display:grid;grid-template-columns:repeat(' + cap.cols + ',auto);gap:0.25in;"'
+        : '';
+      html += '<div class="print-page"' + gridStyle + '>' + cardsHtml + '</div>';
     }
     printStage.innerHTML = html;
   }
@@ -912,6 +1026,8 @@
     buildPrintStage();
     window.print();
   });
+
+  var liveFoldLine = document.querySelector('#tentcard .fold-line');
 
   sizeBtns.forEach(function(btn){
     btn.addEventListener('click', function(){
@@ -922,6 +1038,8 @@
         b.setAttribute('aria-pressed', active ? 'true' : 'false');
       });
       tentcard.classList.toggle('size-index', size === 'index');
+      tentcard.classList.toggle('size-place', size === 'place');
+      liveFoldLine.classList.toggle('fold-vertical', size === 'place');
       updatePageSize();
       updatePrintHint();
     });
