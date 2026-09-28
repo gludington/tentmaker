@@ -1256,24 +1256,29 @@
 
   var liveFoldLine = document.querySelector('#tentcard .fold-line');
 
+  function applySize(btn){
+    var size = btn.getAttribute('data-size');
+    sizeBtns.forEach(function(b){
+      var active = b === btn;
+      b.classList.toggle('is-active', active);
+      b.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+    tentcard.classList.toggle('size-index', size === 'index');
+    tentcard.classList.toggle('size-place', size === 'place');
+    liveFoldLine.classList.toggle('fold-vertical', size === 'place');
+    updatePageSize();
+  }
+
   sizeBtns.forEach(function(btn){
     btn.addEventListener('click', function(){
-      var size = btn.getAttribute('data-size');
-      sizeBtns.forEach(function(b){
-        var active = b === btn;
-        b.classList.toggle('is-active', active);
-        b.setAttribute('aria-pressed', active ? 'true' : 'false');
-      });
-      tentcard.classList.toggle('size-index', size === 'index');
-      tentcard.classList.toggle('size-place', size === 'place');
-      liveFoldLine.classList.toggle('fold-vertical', size === 'place');
-      updatePageSize();
+      applySize(btn);
       updatePrintHint();
       render();
     });
   });
 
-  updatePageSize();
+  // Initial size comes from whichever size button is marked active in the markup.
+  applySize(document.querySelector('.size-btn.is-active') || sizeBtns[0]);
 
   form.addEventListener('input', render);
   form.addEventListener('change', render);
